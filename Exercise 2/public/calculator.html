@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Server-Side Calculator</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                padding: 2rem;
+            }
+            input,
+            select,
+            button {
+                margin: 0.5rem 0;
+                padding: 0.5rem;
+                font-size: 1rem;
+            }
+            #result {
+                margin-top: 1rem;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Calculator</h1>
+
+        <label for="num1">Number 1:</label><br />
+        <input type="number" id="num1" /><br />
+
+        <label for="num2">Number 2:</label><br />
+        <input type="number" id="num2" /><br />
+
+        <label for="operation">Operation:</label><br />
+        <select id="operation">
+            <option value="add">Add (+)</option>
+            <option value="subtract">Subtract (-)</option>
+            <option value="multiply">Multiply (×)</option>
+            <option value="divide">Divide (÷)</option></select
+        ><br />
+
+        <button onclick="calculate()">Calculate</button>
+
+        <div id="result">Result: <span id="result-value">---</span></div>
+
+        <script>
+            function calculate() {
+                const num1 = document.getElementById("num1").value;
+                const num2 = document.getElementById("num2").value;
+                const operation = document.getElementById("operation").value;
+
+                if (num1 === "" || num2 === "") {
+                    alert("Please enter both numbers.");
+                    return;
+                }
+
+                fetch(`http://localhost:3000/calculator/${operation}?num1=${num1}&num2=${num2}`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        document.getElementById("result-value").textContent = data.result;
+                    })
+                    .catch((err) => {
+                        console.error("Error:", err);
+                        document.getElementById("result-value").textContent = "Error";
+                    });
+            }
+        </script>
+    </body>
+</html>
